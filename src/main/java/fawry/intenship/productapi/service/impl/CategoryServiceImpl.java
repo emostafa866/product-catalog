@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Service
-public class CategoryService implements fawry.intenship.productapi.service.CategoryService {
+public class CategoryServiceImpl implements fawry.intenship.productapi.service.CategoryService {
 
     @Autowired
     private CategoryRepo categoryRepo;
@@ -27,5 +27,10 @@ public class CategoryService implements fawry.intenship.productapi.service.Categ
     public Category getOneCategory(Long id){
 
         return categoryRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public Category findByName(String categoryName) {
+        return categoryRepo.findByName(categoryName);
     }
 }

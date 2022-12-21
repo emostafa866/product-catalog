@@ -1,27 +1,26 @@
 package fawry.intenship.productapi.controller;
 
 import fawry.intenship.productapi.entities.Category;
-import fawry.intenship.productapi.entities.Product;
-import fawry.intenship.productapi.service.impl.CategoryService;
+import fawry.intenship.productapi.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+    @RequestMapping("/category")
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
-    @PostMapping("")
+    @PostMapping
     public Category createCategory(@RequestBody Category category){
 
         return categoryService.createCategory(category);
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<Category> getAllCategories(){
 
         return categoryService.getAllCategories();
@@ -32,9 +31,10 @@ public class CategoryController {
 
         return categoryService.getOneCategory(id);
     }
+    @GetMapping("/get/{categoryName}")
+    public Category getCategoryByName(@PathVariable String categoryName ){
+        return categoryService.findByName(categoryName);
+    }
 
-    /*public List<Product>findByCategory(String categoryName){
-        return
-    }*/
 
 }

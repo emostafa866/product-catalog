@@ -20,14 +20,14 @@ public class OrderController {
     private ProductService productService;
 
 
-    @PostMapping("")
-    public Long addNewOrder(@RequestBody OrderDto orderDto){
+    @PostMapping
+    public Long createOrder(@RequestBody OrderDto orderDto){
 
-        return orderService.addNewOrder(orderDto);
+        return orderService.createOrder(orderDto);
     }
 
 
-    @GetMapping("")
+    @GetMapping()
     public List<Order> getAllOrders(){
 
         return orderService.getAllOrders();

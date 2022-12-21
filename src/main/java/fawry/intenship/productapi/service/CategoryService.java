@@ -11,4 +11,7 @@ public interface CategoryService {
     public List<Category> getAllCategories();
 
     public Category getOneCategory(Long id);
+
+    public Category findByName(String categoryName);
+
 }

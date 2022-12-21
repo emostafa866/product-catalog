@@ -9,6 +9,10 @@ import java.util.List;
 public interface ProductRepo extends JpaRepository<Product,Long> {
 
     public List<Product> findByCategoryId(Long id);
+    public List<Product> findByCategoryName(String categoryName);
+
+    public Product findByNameEn(String name);
+
 
   /*  @Query("select count(product_id),\n" +
             "\n" +

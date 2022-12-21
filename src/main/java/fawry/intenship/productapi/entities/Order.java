@@ -1,5 +1,6 @@
 package fawry.intenship.productapi.entities;
 
+import fawry.intenship.productapi.security.appUser.AppUser;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -19,6 +20,8 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
+    @ManyToOne
+    private AppUser user;
 
 
     public Long getId() {
@@ -41,10 +44,17 @@ public class Order implements Serializable {
         return orderDetails;
     }
 
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
+    public void
+    setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
     }
 
+    public AppUser getUser() {
+        return user;
+    }
 
+    public void setUser(AppUser user) {
+        this.user = user;
+    }
 }
 

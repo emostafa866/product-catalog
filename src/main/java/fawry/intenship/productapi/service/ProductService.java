@@ -19,4 +19,7 @@ public interface ProductService {
     public Product update(Product product);
 
     public List<Product>getAllByPopularity();
+
+    public List<Product>findByCategoryName(String categoryName);
+
 }

@@ -2,24 +2,31 @@ package fawry.intenship.productapi.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RecordNotFoundException.class)
-    public ResponseEntity<?>handleRecordNotFoundException(RecordNotFoundException ex){
+    public ResponseEntity<?>handleRecordNotFoundException(RecordNotFoundException ex, WebRequest webRequest){
+        ErrorDetails errorDetails=new ErrorDetails(ex.getMessage(),webRequest.getDescription(false));
     return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .body(ex.getMessage());
+            .body(errorDetails);
     }
 
-    @ExceptionHandler(QuantityException.class)
-    public ResponseEntity<?>handleQuantityException(QuantityException ex){
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<?>handleQuantityException(ConflictException ex, WebRequest webRequest){
+        ErrorDetails errorDetails=new ErrorDetails(ex.getMessage(),webRequest.getDescription(false));
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(ex.getMessage());
+                .body(errorDetails);
     }
+
+
+
 
 }

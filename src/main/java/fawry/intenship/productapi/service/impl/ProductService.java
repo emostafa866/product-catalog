@@ -1,6 +1,7 @@
 package fawry.intenship.productapi.service.impl;
 
 import fawry.intenship.productapi.entities.Product;
+import fawry.intenship.productapi.errors.ConflictException;
 import fawry.intenship.productapi.errors.RecordNotFoundException;
 import fawry.intenship.productapi.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ public class ProductService implements fawry.intenship.productapi.service.Produc
 
 
     public Product addProduct(Product product){
-
+        if(productRepo.findByNameEn(product.getNameEn())!=null){
+            throw new ConflictException("Another product with the same title "+product.getNameEn()+" exists");
+        }
         return productRepo.save(product);
     }
 
@@ -27,7 +30,8 @@ public class ProductService implements fawry.intenship.productapi.service.Produc
 
     public Product getProductById(Long id){
 
-        return productRepo.findById(id).orElseThrow(()->new RecordNotFoundException("id " + id +" doesn't exsit"));
+        return productRepo.findById(id)
+                .orElseThrow(()->new RecordNotFoundException("id " + id +" doesn't exsit"));
     }
 
 
@@ -53,5 +57,10 @@ public class ProductService implements fawry.intenship.productapi.service.Produc
                 .collect(Collectors.toList());
 
         return sorted;
+    }
+
+    @Override
+    public List<Product> findByCategoryName(String categoryName) {
+        return productRepo.findByCategoryName(categoryName);
     }
 }

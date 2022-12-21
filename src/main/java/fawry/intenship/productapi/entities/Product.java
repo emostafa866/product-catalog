@@ -59,7 +59,7 @@ public class Product implements Serializable {
         
     }
 
-    @JsonIgnore
+
     public Long getId() {
         return id;
     }

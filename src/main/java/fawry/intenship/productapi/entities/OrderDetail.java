@@ -13,6 +13,8 @@ public class OrderDetail implements Serializable {
     private Long id;
 
     private Long quantity=1l;
+
+    //add price
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;

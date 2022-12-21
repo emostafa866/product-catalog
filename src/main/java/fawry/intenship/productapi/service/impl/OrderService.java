@@ -6,41 +6,48 @@ import fawry.intenship.productapi.dto.ProductDto;
 import fawry.intenship.productapi.entities.Order;
 import fawry.intenship.productapi.entities.OrderDetail;
 import fawry.intenship.productapi.entities.Product;
-import fawry.intenship.productapi.errors.QuantityException;
+import fawry.intenship.productapi.errors.ConflictException;
 import fawry.intenship.productapi.errors.RecordNotFoundException;
 import fawry.intenship.productapi.repository.OrderRepo;
 import fawry.intenship.productapi.repository.ProductRepo;
+import fawry.intenship.productapi.security.appUser.AppUser;
+import fawry.intenship.productapi.security.appUser.AppUserRepo;
+import fawry.intenship.productapi.security.appUser.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-public class OrderService implements fawry.intenship.productapi.service.OrderService {
+public class
+OrderService implements fawry.intenship.productapi.service.OrderService {
     @Autowired
     private OrderRepo orderRebo;
     @Autowired
     ProductService productService;
     @Autowired
     ProductRepo productRepository;
+    @Autowired
+    AppUserRepo appUserRepo;
 
-    public Order createOrder(Order order){
 
-        return orderRebo.save(order);
-    }
 
-    public List<Order>CreateListOfOrders(List<Order>orders){
-
-        return orderRebo.saveAll(orders);
-    }
     public List<Order> getAllOrders(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String cuurentUser= (String) auth.getPrincipal();
+       AppUser newUser =  appUserRepo.findByEmail(cuurentUser).orElseThrow(null);
+        return newUser.getOrders();
 
-        return orderRebo.findAll();
     }
 
     public Order getOrderById(Long id){
 
-        return orderRebo.findById(id).orElseThrow(()->new RecordNotFoundException("id "+ id + " not exist"));
+        return orderRebo.findById(id)
+                .orElseThrow(()->new RecordNotFoundException("id "+ id + " not exist"));
     }
 
     public void deleteOrder(Long id){
@@ -48,7 +55,7 @@ public class OrderService implements fawry.intenship.productapi.service.OrderSer
         orderRebo.deleteById(id);
     }
 
-    public Long addNewOrder(OrderDto orderDto){
+    public Long createOrder(OrderDto orderDto){
         Order order=new Order();
         order.setNumberOfItems((long) orderDto.getProducts().size());
         order.setOrderDetails(new ArrayList<>());
@@ -59,9 +66,14 @@ public class OrderService implements fawry.intenship.productapi.service.OrderSer
             product.setQuantity(product.getQuantity()-productDto.getQuantity());
             productRepository.saveAndFlush(product);
             }else {
-                throw new QuantityException("quantity is not available");
+                throw new ConflictException("quantity is not available");
             }
         }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = auth.getName();
+        AppUser currentUser = appUserRepo.findByEmail(currentUserName).orElseThrow(null);
+        order.setUser(currentUser);
         orderRebo.saveAndFlush(order);
         return order.getId();
       }

@@ -3,7 +3,7 @@ package fawry.intenship.productapi.controller;
 
 
 import fawry.intenship.productapi.entities.Product;
-import fawry.intenship.productapi.service.impl.CategoryService;
+import fawry.intenship.productapi.service.impl.CategoryServiceImpl;
 import fawry.intenship.productapi.service.impl.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ public class ProductController {
     ProductService productService;
 
     @Autowired
-    CategoryService categoryService;
+    CategoryServiceImpl categoryService;
 
 
     @GetMapping("/product")
@@ -47,7 +47,7 @@ public class ProductController {
     @PostMapping("/category/{id}/product")
     @ResponseStatus(HttpStatus.CREATED)
     public Product addProduct(@PathVariable Long id,@RequestBody Product product){
-        product.setCategory(categoryService.getOneCategory(id));
+      product.setCategory(categoryService.getOneCategory(id));
         return productService.addProduct(product);
     }
 
@@ -75,6 +75,11 @@ public class ProductController {
         return productService.findByCategoryId(id);
     }
 
+    @GetMapping("/product/get/{categoryName}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Product>findByCategoryName(@PathVariable String categoryName){
+        return productService.findByCategoryName(categoryName);
+    }
 
 
 }
